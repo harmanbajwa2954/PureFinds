@@ -5,10 +5,10 @@ import Product from '@/models/Product';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, mainAsin, mainImage, variants } = body;
+    const { name, category, mainAsin, mainImage, variants } = body;
 
-    if (!name || !mainAsin || !mainImage) {
-      return NextResponse.json({ error: 'Missing required fields (name, mainAsin, mainImage)' }, { status: 400 });
+    if (!name || !category || !mainAsin || !mainImage) {
+      return NextResponse.json({ error: 'Missing required fields (name, category, mainAsin, mainImage)' }, { status: 400 });
     }
 
     await connectToDatabase();
@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     // Save to MongoDB
     const newProduct = await Product.create({
       name,
+      category,
       mainAsin,
       mainImage,
       variants

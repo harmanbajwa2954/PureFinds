@@ -24,10 +24,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   if (!selectedVariant) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-all duration-300 flex flex-col h-full group">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-sm hover:shadow-md transition-shadow duration-200 flex flex-col h-full overflow-hidden">
 
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-gray-50 dark:bg-gray-400 flex items-center justify-center p-6">
+      <div className="relative aspect-square bg-[#f7f7f7] dark:bg-gray-300 flex items-center justify-center p-4">
         <img
           src={product.mainImage}
           alt={product.name}
@@ -39,9 +39,20 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="p-6 flex flex-col flex-grow">
 
         {/* Title */}
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight mb-4 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        <h2 className="text-[15px] leading-5 font-medium text-[#007185] dark:text-[#52a9bc] hover:text-[#c45500] dark:hover:text-[#e47911] line-clamp-2 mb-1 cursor-pointer transition-colors">
           {product.name}
         </h2>
+        
+        {/* Dummy Rating */}
+        <div className="flex items-center gap-1 mb-2">
+          <div className="flex text-[#FFA41C] text-sm">
+            ★★★★<span className="text-gray-300 dark:text-gray-600">★</span>
+          </div>
+          <span className="text-xs text-[#007185] dark:text-[#52a9bc] hover:text-[#c45500] dark:hover:text-[#e47911] cursor-pointer">
+            1,234
+          </span>
+        </div>
+
 
         {/* Variants Selection */}
         {product.variants.length > 1 && (
@@ -77,11 +88,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           href={selectedVariant.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 w-full bg-[#FF9900] hover:bg-[#F3A847] dark:bg-[#FF9900] dark:hover:bg-[#E38800] text-gray-900 font-bold py-3.5 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+          className="mt-4 w-full bg-[#FFD814] hover:bg-[#F7CA00] dark:bg-[#FFD814] dark:hover:bg-[#F7CA00] border border-[#FCD200] hover:border-[#F2C200] text-gray-900 text-sm font-medium py-2 px-4 rounded-full transition-colors flex items-center justify-center gap-2 shadow-sm"
         >
-          <ShoppingCart className="w-5 h-5" />
-          Buy on Amazon
-          <ExternalLink className="w-4 h-4 ml-1 opacity-60" />
+          <ShoppingCart className="w-4 h-4" />
+          View on Amazon
+          <ExternalLink className="w-3 h-3 ml-1 opacity-60" />
         </a>
       </div>
     </div>

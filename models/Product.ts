@@ -9,6 +9,7 @@ export interface IVariant {
 
 export interface IProduct extends Document {
   name: string;
+  category: string;
   mainAsin: string;
   mainImage: string;
   variants: IVariant[];
@@ -23,6 +24,7 @@ const VariantSchema: Schema = new Schema({
 
 const ProductSchema: Schema = new Schema({
   name: { type: String, required: true },
+  category: { type: String, required: true, default: 'Uncategorized' },
   mainAsin: { type: String, required: true, unique: true },
   mainImage: { type: String, required: true },
   variants: [VariantSchema]

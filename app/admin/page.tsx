@@ -8,6 +8,7 @@ export default function AdminPage() {
   const [url, setUrl] = useState('');
   const [asin, setAsin] = useState('');
   const [name, setName] = useState('');
+  const [category, setCategory] = useState('Electronics');
   const [mainImage, setMainImage] = useState('');
   const [variants, setVariants] = useState<IVariant[]>([
     { name: 'Default', asin: '', url: '', isDefault: true }
@@ -41,6 +42,14 @@ export default function AdminPage() {
           }
           return newVariants;
         });
+      }
+
+      // Extract Name
+      const nameRegex = /amazon\.[a-z\.]+\/([^\/]+)\/dp\//i;
+      const nameMatch = url.match(nameRegex);
+      if (nameMatch && nameMatch[1]) {
+        const extractedName = decodeURIComponent(nameMatch[1]).replace(/-/g, ' ');
+        setName(extractedName);
       }
     }
   }, [url]);
@@ -84,6 +93,7 @@ export default function AdminPage() {
         },
         body: JSON.stringify({
           name,
+          category,
           mainAsin: asin,
           mainImage,
           variants
@@ -102,6 +112,7 @@ export default function AdminPage() {
       setUrl('');
       setAsin('');
       setName('');
+      setCategory('Electronics');
       setMainImage('');
       setVariants([{ name: 'Default', asin: '', url: '', isDefault: true }]);
 
@@ -172,6 +183,27 @@ export default function AdminPage() {
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-white"
                   required
                 />
+              </div>
+
+              <div className="md:col-span-2">
+                <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Category *
+                </label>
+                <select
+                  id="category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-white"
+                  required
+                >
+                  <option value="Electronics">Electronics</option>
+                  <option value="Home & Kitchen">Home & Kitchen</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Books">Books</option>
+                  <option value="Toys & Games">Toys & Games</option>
+                  <option value="Health & Beauty">Health & Beauty</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
 
               <div className="md:col-span-2">

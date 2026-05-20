@@ -3,6 +3,7 @@ import connectToDatabase from '@/lib/mongodb';
 import Product from '@/models/Product';
 import ProductCard from '@/components/ProductCard';
 import SearchBar from '@/components/SearchBar';
+import CategoryNav from '@/components/CategoryNav';
 
 // Since searchParams is an async promise in Next.js 15+
 type Props = {
@@ -13,13 +14,17 @@ export default async function Home({ searchParams }: Props) {
   // Await searchParams in Next.js 15+
   const resolvedSearchParams = await searchParams;
   const q = typeof resolvedSearchParams.q === 'string' ? resolvedSearchParams.q : '';
+  const currentCategory = typeof resolvedSearchParams.category === 'string' ? resolvedSearchParams.category : 'All';
 
   await connectToDatabase();
 
   // Create query object
-  let query = {};
+  let query: any = {};
   if (q) {
-    query = { name: { $regex: q, $options: 'i' } }; // Case-insensitive search
+    query.name = { $regex: q, $options: 'i' }; // Case-insensitive search
+  }
+  if (currentCategory !== 'All') {
+    query.category = currentCategory;
   }
 
   // Fetch products, sort by newest
@@ -52,6 +57,9 @@ export default async function Home({ searchParams }: Props) {
         </div>
       </header>
 
+      {/* Category Navigation Bar */}
+      <CategoryNav currentCategory={currentCategory} />
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         {products.length === 0 ? (
@@ -60,7 +68,7 @@ export default async function Home({ searchParams }: Props) {
             <p className="text-gray-500 dark:text-gray-400">We couldn't find anything matching "{q}". Try a different search.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8">
             {products.map((product: any) => (
               <ProductCard key={product._id} product={product} />
             ))}
