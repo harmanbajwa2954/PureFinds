@@ -24,30 +24,15 @@ export default async function Home({ searchParams }: Props) {
 
   // Fetch products, sort by newest
   const rawProducts = await Product.find(query).sort({ createdAt: -1 }).lean();
-  
-  // Serialize for client component
-  const products = rawProducts.map((p: any) => {
-    // Mongoose ObjectId and dates need converting for Client Components
-    const serialized = { ...p, _id: p._id.toString() };
-    if (serialized.createdAt) serialized.createdAt = serialized.createdAt.toString();
-    if (serialized.updatedAt) serialized.updatedAt = serialized.updatedAt.toString();
-    
-    // convert variants ids
-    if (serialized.variants) {
-      serialized.variants = serialized.variants.map((v: any) => ({
-        ...v,
-        _id: v._id?.toString()
-      }));
-    }
-    
-    return serialized;
-  });
+
+  // Serialize for client component to remove Mongoose objects/null prototypes
+  const products = JSON.parse(JSON.stringify(rawProducts));
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* Header / Hero Section */}
       <header className="relative bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 pt-16 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden transition-colors">
-        
+
         {/* Subtle Background Elements */}
         <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent dark:from-blue-900/40"></div>
@@ -60,7 +45,7 @@ export default async function Home({ searchParams }: Props) {
           <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10">
             Handpicked premium products for your everyday life.
           </p>
-          
+
           <Suspense fallback={<div className="h-16 max-w-2xl mx-auto bg-gray-100 dark:bg-gray-800 animate-pulse rounded-2xl" />}>
             <SearchBar />
           </Suspense>
@@ -76,7 +61,7 @@ export default async function Home({ searchParams }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {products.map((product) => (
+            {products.map((product: any) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
