@@ -1,64 +1,86 @@
-import Image from "next/image";
+import { Suspense } from 'react';
+import connectToDatabase from '@/lib/mongodb';
+import Product from '@/models/Product';
+import ProductCard from '@/components/ProductCard';
+import SearchBar from '@/components/SearchBar';
 
-export default function Home() {
+// Since searchParams is an async promise in Next.js 15+
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function Home({ searchParams }: Props) {
+  // Await searchParams in Next.js 15+
+  const resolvedSearchParams = await searchParams;
+  const q = typeof resolvedSearchParams.q === 'string' ? resolvedSearchParams.q : '';
+
+  await connectToDatabase();
+
+  // Create query object
+  let query = {};
+  if (q) {
+    query = { name: { $regex: q, $options: 'i' } }; // Case-insensitive search
+  }
+
+  // Fetch products, sort by newest
+  const rawProducts = await Product.find(query).sort({ createdAt: -1 }).lean();
+  
+  // Serialize for client component
+  const products = rawProducts.map((p: any) => {
+    // Mongoose ObjectId and dates need converting for Client Components
+    const serialized = { ...p, _id: p._id.toString() };
+    if (serialized.createdAt) serialized.createdAt = serialized.createdAt.toString();
+    if (serialized.updatedAt) serialized.updatedAt = serialized.updatedAt.toString();
+    
+    // convert variants ids
+    if (serialized.variants) {
+      serialized.variants = serialized.variants.map((v: any) => ({
+        ...v,
+        _id: v._id?.toString()
+      }));
+    }
+    
+    return serialized;
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      {/* Header / Hero Section */}
+      <header className="relative bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 pt-16 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden transition-colors">
+        
+        {/* Subtle Background Elements */}
+        <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent dark:from-blue-900/40"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+            Discover Curated Finds
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+            Handpicked premium products for your everyday life.
           </p>
+          
+          <Suspense fallback={<div className="h-16 max-w-2xl mx-auto bg-gray-100 dark:bg-gray-800 animate-pulse rounded-2xl" />}>
+            <SearchBar />
+          </Suspense>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        {products.length === 0 ? (
+          <div className="text-center py-24">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">No products found</h2>
+            <p className="text-gray-500 dark:text-gray-400">We couldn't find anything matching "{q}". Try a different search.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
