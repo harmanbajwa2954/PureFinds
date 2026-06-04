@@ -4,6 +4,7 @@ import Product from '@/models/Product';
 import ProductCard from '@/components/ProductCard';
 import SearchBar from '@/components/SearchBar';
 import CategoryNav from '@/components/CategoryNav';
+import { Search } from 'lucide-react';
 
 // Since searchParams is an async promise in Next.js 15+
 type Props = {
@@ -36,7 +37,7 @@ export default async function Home({ searchParams }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* Header / Hero Section */}
-      <header className="relative bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 pt-16 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden transition-colors">
+      <header className="relative bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 pt-10 pb-8 sm:pt-16 sm:pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden transition-colors">
 
         {/* Subtle Background Elements */}
         <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
@@ -44,14 +45,14 @@ export default async function Home({ searchParams }: Props) {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3 sm:mb-4">
             Discover Curated Finds
           </h1>
-          <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+          <p className="text-base sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-6 sm:mb-10 px-2">
             Handpicked premium products for your everyday life.
           </p>
 
-          <Suspense fallback={<div className="h-16 max-w-2xl mx-auto bg-gray-100 dark:bg-gray-800 animate-pulse rounded-2xl" />}>
+          <Suspense fallback={<div className="h-12 sm:h-16 max-w-2xl mx-auto skeleton-shimmer rounded-2xl" />}>
             <SearchBar />
           </Suspense>
         </div>
@@ -61,14 +62,22 @@ export default async function Home({ searchParams }: Props) {
       <CategoryNav currentCategory={currentCategory} />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 relative z-10">
         {products.length === 0 ? (
-          <div className="text-center py-24">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">No products found</h2>
-            <p className="text-gray-500 dark:text-gray-400">We couldn't find anything matching "{q}". Try a different search.</p>
+          <div className="text-center py-16 sm:py-24 px-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 mb-6">
+              <Search className="w-7 h-7" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2">No products found</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base max-w-md mx-auto">
+              {q
+                ? <>We couldn&apos;t find anything matching &ldquo;{q}&rdquo;. Try a different search.</>
+                : <>No products in this category yet. Check back soon!</>
+              }
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {products.map((product: any) => (
               <ProductCard key={product._id} product={product} />
             ))}
