@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import connectToDatabase from '@/lib/mongodb';
 import Product from '@/models/Product';
 import ProductCard from '@/components/ProductCard';
@@ -84,6 +85,16 @@ export default async function Home({ searchParams }: Props) {
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 dark:border-gray-800 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-400 dark:text-gray-500">
+          <span>&copy; {new Date().getFullYear()} PureFinds. All rights reserved.</span>
+          <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            Privacy Policy
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

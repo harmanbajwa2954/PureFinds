@@ -53,13 +53,13 @@ export default function FloatingForm() {
         />
       )}
 
-      <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end w-full sm:w-auto">
+      <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end w-full sm:w-auto pointer-events-none">
         {/* Form Card — Bottom sheet on mobile, floating card on desktop */}
         <div 
           className={`w-full sm:w-96 sm:mb-4 sm:mr-0 bg-white dark:bg-gray-800 shadow-2xl overflow-hidden border-t sm:border border-gray-100 dark:border-gray-700 transition-all duration-300 ease-in-out transform
             sm:rounded-2xl sm:origin-bottom-right
             ${isOpen
-              ? 'translate-y-0 opacity-100 sm:scale-100'
+              ? 'translate-y-0 opacity-100 sm:scale-100 pointer-events-auto'
               : 'translate-y-full opacity-0 sm:translate-y-8 sm:scale-90 pointer-events-none'
             }`}
         >
@@ -146,7 +146,7 @@ export default function FloatingForm() {
             isOpen
               ? 'hidden sm:flex bg-gray-600 hover:bg-gray-700'
               : 'flex bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-600/30'
-          } text-white rounded-full p-3.5 sm:p-4 shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 m-4 sm:m-0 self-end`}
+          } pointer-events-auto text-white rounded-full p-3.5 sm:p-4 shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 m-4 sm:m-0 self-end`}
           aria-label="Suggest a product"
         >
           {isOpen ? <X size={24} /> : <MessageSquare size={24} />}

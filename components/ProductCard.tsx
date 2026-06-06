@@ -32,9 +32,16 @@ export default function ProductCard({ product }: ProductCardProps) {
   if (!selectedVariant) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-sm hover:shadow-lg transition-all duration-200 flex flex-col h-full overflow-hidden group active:scale-[0.98] sm:active:scale-100">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-sm hover:shadow-lg transition-all duration-200 flex flex-col h-full overflow-hidden group">
 
       {/* Image Container */}
+      <a
+          href={selectedVariant.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={handleBuyClick}
+          className="block"
+        >
       <div className="relative aspect-square bg-[#f7f7f7] dark:bg-gray-300 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
         {/* Skeleton placeholder while image loads */}
         {!imageLoaded && (
@@ -50,6 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           }`}
         />
       </div>
+      </a>
 
       {/* Content Container */}
       <div className="p-3 sm:p-5 flex flex-col flex-grow">
@@ -58,16 +66,6 @@ export default function ProductCard({ product }: ProductCardProps) {
         <h2 className="text-[13px] sm:text-[15px] leading-[1.3] sm:leading-5 font-medium text-[#007185] dark:text-[#52a9bc] hover:text-[#c45500] dark:hover:text-[#e47911] line-clamp-2 mb-1 cursor-pointer transition-colors">
           {product.name}
         </h2>
-        
-        {/* Dummy Rating */}
-        <div className="flex items-center gap-1 mb-2">
-          <div className="flex text-[#FFA41C] text-xs sm:text-sm">
-            ★★★★<span className="text-gray-300 dark:text-gray-600">★</span>
-          </div>
-          <span className="text-[10px] sm:text-xs text-[#007185] dark:text-[#52a9bc] hover:text-[#c45500] dark:hover:text-[#e47911] cursor-pointer">
-            1,234
-          </span>
-        </div>
 
 
         {/* Variants Selection */}
