@@ -12,6 +12,9 @@ const categories = [
   'Books',
   'Toys & Games',
   'Health & Beauty',
+  'Grocery',
+  'Sports',
+  'Gym and Heavy equipments',
   'Other'
 ];
 
