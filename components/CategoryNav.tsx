@@ -9,12 +9,13 @@ const categories = [
   'Electronics',
   'Home & Kitchen',
   'Clothing',
+  'Shoes',
+  'Watches and Accesories',
   'Books',
   'Toys & Games',
   'Health & Beauty',
   'Grocery',
   'Sports',
-  'Gym and Heavy equipments',
   'Other'
 ];
 
