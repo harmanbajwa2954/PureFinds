@@ -199,12 +199,13 @@ export default function AdminPage() {
                   <option value="Electronics">Electronics</option>
                   <option value="Home & Kitchen">Home & Kitchen</option>
                   <option value="Clothing">Clothing</option>
+                  <option value="Shoes">Shoes</option>
+                  <option value="Watches and Accesories">Watches and Accessories</option>
                   <option value="Books">Books</option>
                   <option value="Toys & Games">Toys & Games</option>
                   <option value="Health & Beauty">Health & Beauty</option>
                   <option value="Grocery">Groceries</option>
                   <option value="Sports">Sports</option>
-                  <option value="Heavy Items">Gym and Heavy equipments</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
